@@ -25,4 +25,4 @@ jobs:
         context: .
         push: true
         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/js:latest, ${{ secrets.DOCKER_HUB_USERNAME }}/js:${{ github.run_number }}
-        cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/js:buildcache
+
