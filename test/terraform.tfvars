@@ -1,2 +1,2 @@
-environment = "test"
-project     = "terraform-test"
+environment = "main"
+project     = "terraform"
