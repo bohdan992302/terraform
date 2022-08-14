@@ -13,12 +13,8 @@ defaults:
 jobs:
   terraform:
     name: "Terraform-jobs"
-    runs-on: [ '${{ matrix.runner }}']
-    strategy:
-      matrix:
-        include:
-          - environment: main
-            runner: ubuntu-latest
+    runs-on: ubuntu-latest
+
     env:	
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -35,21 +31,21 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: |
-           rm -rf .terraform
-           terraform init -backend-config=${{ matrix.environment }}/terraform.tfstate -upgrade=true -no-color -input=false
+        run: terraform init
 
       - name: Terraform Plan
         id: plan
-        run: |
-          terraform plan -input=false -var-file=${{ matrix.environment }}/terraform.tfstate -no-color
+        if: github.event_name == 'push'
+        run: terraform plan -no-color
+        continue-on-error: true
+
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         id: apply
-        run: terraform apply -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfstate
+        run: terraform apply -auto-approve
 
       - name: Terraform Destroy
         if: github.ref == 'refs/heads/destroy'
         id: destroy
-        run: terraform destroy -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfstate
+        run: terraform destroy -auto-approve
