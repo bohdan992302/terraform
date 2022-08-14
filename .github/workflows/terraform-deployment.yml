@@ -1,4 +1,4 @@
-name: "Terraform deployment"
+name: Terraform deployment
 
 on:
   workflow_dispatch:
@@ -6,19 +6,17 @@ on:
     branches:
       - main
 
-defaults:
-  run:
-    shell: bash
+
 
 jobs:
   terraform:
-    name: "Terraform-jobs"
-    runs-on: [ '${{ matrix.runner }}']
-    strategy:
-      matrix:
-        include:
-          - environment: main
-            runner: ubuntu-latest
+    name: Terraform-jobs
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./terraform
+
     env:	
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -26,30 +24,50 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_wrapper: false
 
+      - name: Setup Terraform backend variables
+        working-directory: ./terraform
+        id: backend
+        run: |-
+          cat > backend.tfvars <<EOF
+          access_key = "${{ secrets.AWS_ACCESS_KEY_ID }}"
+          secret_key = "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+          region     = "${{ secrets.AWS_REGION }}"
+          EOF
+
       - name: Terraform Init
         id: init
         run: |
-           rm -rf .terraform
-           terraform init -backend-config=${{ matrix.environment }}/backend.tfvars -upgrade=true -no-color -input=false
+           terraform init -backend-config="backend.tfvars"
+
+        
+      - name: Setup Terraform backend variables
+        working-directory: ./terraform
+        id: terraform
+        run: |-
+          cat > terraform.tfvars <<EOF
+          access_key = "${{ secrets.AWS_ACCESS_KEY_ID }}"
+          secret_key = "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+          region     = "${{ secrets.AWS_REGION }}"
+          EOF
 
       - name: Terraform Plan
         id: plan
         run: |
-          terraform plan -input=false -var-file=${{ matrix.environment }}/backend.tfvars -no-color
+          terraform plan -input=false -var-file=terraform.tfvars
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
         id: apply
-        run: terraform apply -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
+        run: terraform apply -auto-approve -input=false -var-file=terraform.tfvars
 
       - name: Terraform Destroy
         if: github.ref == 'refs/heads/destroy'
         id: destroy
-        run: terraform destroy -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
+        run: terraform destroy -auto-approve -input=false -var-file=terraform.tfvars
