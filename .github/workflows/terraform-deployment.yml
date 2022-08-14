@@ -17,7 +17,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - environment: test
+          - environment: main
             runner: ubuntu-latest
     env:	
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
