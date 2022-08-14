@@ -7,7 +7,6 @@ on:
       - main
 
 
-
 jobs:
   terraform:
     name: Terraform-jobs
@@ -15,7 +14,6 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./terraform
 
     env:	
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -31,31 +29,11 @@ jobs:
         with:
           terraform_wrapper: false
 
-      - name: Setup Terraform backend variables
-        working-directory: ./terraform
-        id: backend
-        run: |-
-          cat > backend.tfvars <<EOF
-          access_key = "${{ secrets.AWS_ACCESS_KEY_ID }}"
-          secret_key = "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-          region     = "${{ secrets.AWS_REGION }}"
-          EOF
 
       - name: Terraform Init
         id: init
         run: |
-           terraform init -backend-config="backend.tfvars"
-
-        
-      - name: Setup Terraform backend variables
-        working-directory: ./terraform
-        id: terraform
-        run: |-
-          cat > terraform.tfvars <<EOF
-          access_key = "${{ secrets.AWS_ACCESS_KEY_ID }}"
-          secret_key = "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-          region     = "${{ secrets.AWS_REGION }}"
-          EOF
+           terraform init
 
       - name: Terraform Plan
         id: plan
