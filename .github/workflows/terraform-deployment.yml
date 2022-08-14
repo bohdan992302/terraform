@@ -42,7 +42,7 @@ jobs:
       - name: Terraform Plan
         id: plan
         run: |
-          terraform plan -input=false -var-file=${{ matrix.environment }}/terraform.tfvars -no-color
+          terraform plan -input=false -var-file=${{ matrix.environment }}/backend.tfvars -no-color
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
