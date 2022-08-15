@@ -1,6 +1,9 @@
 name: Terraform Destroy
 on:
- workflow_dispatch:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
  terraform destroy:
@@ -27,6 +30,6 @@ jobs:
         continue-on-error: true
 
       - name: Terraform destroy
-        working-directory: ./test
         id: destroy
+        working-directory: ./test
         run: terraform destroy -auto-approve

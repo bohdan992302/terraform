@@ -2,6 +2,9 @@ name: Terraform Apply
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   terraform-apply:
@@ -40,6 +43,6 @@ jobs:
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        working-directory: ./test
         id: apply
+        working-directory: ./test
         run: terraform apply -auto-approve

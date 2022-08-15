@@ -41,6 +41,6 @@ jobs:
         continue-on-error: true
 
       - name: Terraform Plan Status
-        working-directory: ./test
         if: steps.plan.outcome == 'failure'
+        working-directory: ./test
         run: exit 1
