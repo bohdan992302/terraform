@@ -30,6 +30,13 @@ jobs:
         id: init
         run: |
            terraform init
+        
+      - name: Terraform Plan
+        id: plan
+        if: github.event_name == 'push'
+        working-directory: ./test
+        run: terraform plan -no-color
+        continue-on-error: true
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
