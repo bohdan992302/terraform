@@ -9,11 +9,6 @@ jobs:
   terraform-plan:
     name: terraform-plan
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        path:
-          - test
-
     defaults:
       run:
         shell: bash
@@ -34,9 +29,9 @@ jobs:
 
       - name: Terraform Init
         id: init
+        working-directory: ./test
         run: |
-           cd terraform/${{ matrix.path }}
-           terraform init  -input=false
+          terraform init  -input=false
 
       - name: Terraform Plan
         id: plan
