@@ -26,11 +26,13 @@ jobs:
           terraform_wrapper: false
 
       - name: Terraform Init
+        working-directory: ./test
         id: init
         run: |
            terraform init
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        working-directory: ./test
         id: apply
         run: terraform apply -auto-approve

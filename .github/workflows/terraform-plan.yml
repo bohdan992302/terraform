@@ -36,9 +36,11 @@ jobs:
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'push'
+        working-directory: ./test
         run: terraform plan -no-color
         continue-on-error: true
 
       - name: Terraform Plan Status
+        working-directory: ./test
         if: steps.plan.outcome == 'failure'
         run: exit 1

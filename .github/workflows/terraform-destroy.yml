@@ -18,12 +18,15 @@ jobs:
 
       - name: Terraform Init
         id: init
+        working-directory: ./test
         run: terraform init  
         
       - name: Show Destroy plan
+        working-directory: ./test
         run: terraform plan -destroy
         continue-on-error: true
 
       - name: Terraform destroy
+        working-directory: ./test
         id: destroy
         run: terraform destroy -auto-approve
