@@ -1,4 +1,4 @@
-name: Terraform deployment
+name: Terraform plan
 
 on:
   push:
@@ -6,9 +6,14 @@ on:
       - main
 
 jobs:
-  terraform-deployment:
-    name: terraform-deployment
+  terraform-plan:
+    name: terraform-plan
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        path:
+          - test
+
     defaults:
       run:
         shell: bash
@@ -30,7 +35,8 @@ jobs:
       - name: Terraform Init
         id: init
         run: |
-           terraform init
+           cd /${{ matrix.path }}
+           terraform init  -input=false
 
       - name: Terraform Plan
         id: plan
@@ -41,8 +47,3 @@ jobs:
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
         run: exit 1
-
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        id: apply
-        run: terraform apply -auto-approve

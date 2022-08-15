@@ -3,7 +3,7 @@ on:
  workflow_dispatch:
 
 jobs:
- tf-destroy:
+ terraform destroy:
    runs-on: ubuntu-latest
    env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
