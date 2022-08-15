@@ -33,7 +33,6 @@ jobs:
         
       - name: Terraform Plan
         id: plan
-        if: github.event_name == 'push'
         working-directory: ./test
         run: |
           terraform plan -no-color
@@ -47,7 +46,6 @@ jobs:
           exit 1
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         id: apply
         working-directory: ./test
         run: |
