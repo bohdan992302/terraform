@@ -16,8 +16,11 @@ jobs:
         version: 'v1.24.3'
       id: install
 
-    - name: Run chart-releaser
-      uses: helm/chart-releaser-action@v1.1.0
+    - name: Install helm
+      uses: azure/setup-helm@v1
+      with:
+         version: v3.8.1
+
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
