@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
 
 jobs:
- kubernetes-deployment:
+ helm-deployment:
    runs-on: ubuntu-latest
 
    steps:
