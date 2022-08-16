@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: {{ .Release.Name }}-application-deployment
+   labels: 
+     app: {{ .Release.Name }}-get-status-code
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      project: {{ .Release.Name }}-web-application
+  template:
+    metadata:
+      labels:
+        project: {{ .Release.Name }}-web-application
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-front-application
+          image: {{ .Values.container.image }}
+          imagePullPolicy: "Always"
+          ports:
+           - containerPort: {{ .Values.container.containerPort }}

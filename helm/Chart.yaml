@@ -1,0 +1,10 @@
+apiVersion: v2
+name: helm-chart-web-application
+description: practice
+version: "1.0.0"
+appVersion: "beta-v1.0.0"
+
+keywords:
+  - js
+  - docker
+  - helm

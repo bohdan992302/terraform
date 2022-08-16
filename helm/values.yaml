@@ -1,0 +1,6 @@
+replicaCount: 2
+
+
+container:
+  image: bohdanchiq/js:latest
+  containerPort: 5000
