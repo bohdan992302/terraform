@@ -35,4 +35,4 @@ jobs:
 
     - name: Run helm files
       run: |
-        helm install app-js helm/
+        helm upgrade --install app-js helm/
