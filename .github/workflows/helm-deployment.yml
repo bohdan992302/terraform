@@ -10,17 +10,10 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v2
 
-    - name: Install kubectl
-      uses: azure/setup-kubectl@v1
-      with:
-        version: 'v1.24.3'
-      id: install
-
     - name: Install helm
       uses: azure/setup-helm@v1
       with:
          version: v3.8.1
-
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -31,7 +24,6 @@ jobs:
 
     - name: Update kube config
       run: aws eks update-kubeconfig --name terraform-eks-kubernetes-new --region ${{ secrets.AWS_REGION }}
-
 
     - name: Run helm files
       run: |
